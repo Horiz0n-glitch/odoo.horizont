@@ -52,12 +52,14 @@
     .text-gradient-primary {
       background: linear-gradient(to right, #3b82f6, #60a5fa);
       -webkit-background-clip: text;
+      background-clip: text;
       -webkit-text-fill-color: transparent;
     }
 
     .text-gradient-lime {
       background: linear-gradient(to right, #84cc16, #a3e635);
       -webkit-background-clip: text;
+      background-clip: text;
       -webkit-text-fill-color: transparent;
     }
 
@@ -143,6 +145,30 @@
       }
     }
 
+    @keyframes perspective-reveal {
+      from {
+        opacity: 0;
+        transform: perspective(1200px) translateY(100px) translateZ(-100px) rotateX(25deg);
+      }
+
+      to {
+        opacity: 1;
+        transform: perspective(1200px) translateY(0) translateZ(0) rotateX(0deg);
+      }
+    }
+
+    @keyframes perspective-reveal-inclined {
+      from {
+        opacity: 0;
+        transform: perspective(1500px) translateY(15vh) rotateX(45deg) scale(0.9);
+      }
+
+      to {
+        opacity: 1;
+        transform: perspective(1500px) translateY(0) rotateX(10deg) scale(1);
+      }
+    }
+
     @keyframes pulse-glow {
       0% {
         box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4);
@@ -189,6 +215,42 @@
       }
     }
 
+    @keyframes reveal-left {
+      from {
+        opacity: 0;
+        transform: translateX(-50px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    @keyframes reveal-right {
+      from {
+        opacity: 0;
+        transform: translateX(50px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    @keyframes scale-up {
+      from {
+        opacity: 0;
+        transform: scale(0.8);
+      }
+
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
     .animate-chart-pulse {
       animation: chart-pulse 4s infinite ease-in-out;
       transform-origin: bottom;
@@ -210,6 +272,67 @@
 
     .animate-blob {
       animation: blob 15s infinite alternate ease-in-out;
+    }
+
+    .reveal-perspective {
+      animation: perspective-reveal 1.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+      opacity: 0;
+    }
+
+    .reveal-inclined {
+      animation: perspective-reveal-inclined 2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      opacity: 0;
+    }
+
+    .scroll-straighten {
+      will-change: transform, opacity;
+      transform: perspective(1500px) rotateX(25deg) scale(0.9) translateY(50px);
+      opacity: 0;
+      transition: transform 0.1s ease-out, opacity 0.5s ease-out;
+    }
+
+    .reveal-left {
+      animation: reveal-left 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      opacity: 0;
+    }
+
+    .reveal-right {
+      animation: reveal-right 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      opacity: 0;
+    }
+
+    .reveal-scale {
+      animation: scale-up 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      opacity: 0;
+    }
+
+    .tilt-card {
+      transition: transform 0.2s cubic-bezier(0.2, 0, 0.2, 1);
+      transform-style: preserve-3d;
+    }
+
+    .parallax-blob {
+      will-change: transform;
+      transition: transform 0.4s cubic-bezier(0.2, 0, 0.2, 1);
+    }
+
+    /* Interactive Cursor Effects */
+    #hero-spotlight {
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 1;
+      transform: translate(-50%, -50%);
+      will-change: left, top;
+      filter: blur(40px);
+    }
+
+    .magnetic-wrap {
+      display: inline-block;
+      transition: transform 0.3s cubic-bezier(0.2, 0, 0.2, 1);
     }
 
     .delay-100 {
@@ -256,7 +379,7 @@
   class="font-body bg-background-light dark:bg-background-dark text-text-dark dark:text-text-light antialiased selection:bg-primary selection:text-white transition-colors duration-300">
   <header
     class="fixed w-full top-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-gray-100 dark:border-gray-800">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 md:h-20 flex items-center justify-between">
       <div class="flex items-center gap-2">
         <div class="w-8 h-8 bg-black dark:bg-white rounded-md flex items-center justify-center">
           <span class="material-icons-round text-white dark:text-black text-xl">grid_view</span>
@@ -277,21 +400,31 @@
           <span class="material-icons-round text-xl dark:hidden">dark_mode</span>
           <span class="material-icons-round text-xl hidden dark:block">light_mode</span>
         </button>
-        <a class="hidden sm:inline-flex px-5 py-2.5 rounded-full border border-gray-200 dark:border-gray-700 bg-transparent text-sm font-semibold text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
-          href="https://wa.me/543751588456?text=Hola%20Horizont%2C%20me%20gustar%C3%ADa%20recibir%20m%C3%A1s%20informaci%C3%B3n%20sobre%20el%20sistema%20de%20gesti%C3%B3n."
-          target="_blank">
-          Contacto
-        </a>
+        <button class="md:hidden p-2 text-gray-500" id="mobile-menu-toggle">
+          <span class="material-icons-round text-2xl">menu</span>
+        </button>
       </div>
+    </div>
+    <!-- Mobile Menu Overlay -->
+    <div id="mobile-menu" class="hidden fixed inset-0 z-40 bg-white dark:bg-slate-900 pt-20 px-6">
+      <nav class="flex flex-col gap-6 text-lg font-bold text-gray-900 dark:text-white">
+        <a href="#inicio">Inicio</a>
+        <a href="#modulos">Módulos</a>
+        <a href="#servicios">Servicios</a>
+        <a href="#nosotros">Nosotros</a>
+        <a href="#precios">Precios</a>
+      </nav>
     </div>
   </header>
 
-  <section id="inicio" class="pt-32 pb-20 lg:pt-40 lg:pb-32 overflow-hidden relative">
+  <section id="inicio" class="pt-24 pb-12 md:pt-40 md:pb-32 overflow-hidden relative">
+    <div id="hero-spotlight" class="hidden md:block"></div>
     <div
       class="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-blue-50/50 to-transparent dark:from-blue-900/10 pointer-events-none">
     </div>
     <div
-      class="absolute top-20 left-20 w-72 h-72 bg-blue-200/30 rounded-full blur-3xl pointer-events-none animate-blob">
+      class="absolute top-20 left-20 w-72 h-72 bg-blue-200/30 rounded-full blur-3xl pointer-events-none animate-blob parallax-blob"
+      data-speed="0.5">
     </div>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
       <div class="grid lg:grid-cols-2 gap-12 items-center">
@@ -300,26 +433,31 @@
             class="inline-block px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-300 text-xs font-bold tracking-wide uppercase">
             • Solución ERP Todo-en-uno disponible
           </span>
-          <h1 class="font-display font-bold text-5xl sm:text-6xl leading-[1.1] text-gray-900 dark:text-white">
+          <h1
+            class="font-display font-bold text-3xl sm:text-5xl md:text-6xl leading-[1.1] text-gray-900 dark:text-white">
             Sistema de Gestión Comercial <br />
             <span class="text-gradient-primary pr-2">Rápido, Seguro y Económico</span>
           </h1>
-          <p class="text-lg text-gray-600 dark:text-gray-300 max-w-lg leading-relaxed">
+          <p class="text-base md:text-lg text-gray-600 dark:text-gray-300 max-w-lg leading-relaxed">
             Impulse su negocio con el sistema de gestión comercial más eficiente del mercado. Centralice sus ventas,
             stock y finanzas de forma moderna y 100% digital.
           </p>
           <div class="flex flex-wrap gap-4">
-            <a class="px-8 py-4 rounded-full bg-secondary text-gray-900 font-bold hover:shadow-lg hover:shadow-lime-300/30 transition-all flex items-center gap-2 group"
-              href="#">
-              Explorar Módulos
-              <span
-                class="material-icons-round group-hover:translate-x-1 transition-transform text-lg">arrow_outward</span>
-            </a>
-            <a class="px-8 py-4 rounded-full border border-gray-200 dark:border-gray-600 bg-white dark:bg-transparent text-gray-900 dark:text-white font-semibold hover:border-gray-400 dark:hover:border-gray-400 transition-colors"
-              href="https://wa.me/543751588456?text=Hola%20Horizont%2C%20me%20gustar%C3%ADa%20solicitar%20una%20demo%20gratuita%20del%20sistema."
-              target="_blank">
-              Solicitar Demo
-            </a>
+            <div class="magnetic-wrap">
+              <a class="px-8 py-4 rounded-full bg-secondary text-gray-900 font-bold hover:shadow-lg hover:shadow-lime-300/30 transition-all flex items-center gap-2 group"
+                href="#">
+                Explorar Módulos
+                <span
+                  class="material-icons-round group-hover:translate-x-1 transition-transform text-lg">arrow_outward</span>
+              </a>
+            </div>
+            <div class="magnetic-wrap">
+              <a class="px-8 py-4 rounded-full border border-gray-200 dark:border-gray-600 bg-white dark:bg-transparent text-gray-900 dark:text-white font-semibold hover:border-gray-400 dark:hover:border-gray-400 transition-colors"
+                href="https://wa.me/543751588456?text=Hola%20Horizont%2C%20me%20gustar%C3%ADa%20solicitar%20una%20demo%20gratuita%20del%20sistema."
+                target="_blank">
+                Solicitar Demo
+              </a>
+            </div>
           </div>
           <div class="pt-8 flex items-center gap-6 text-sm text-gray-400 font-medium uppercase tracking-wider">
             <div class="flex items-center gap-2"><span class="material-icons-round text-lg">storefront</span> Comercios
@@ -328,9 +466,9 @@
             <div class="text-gray-300 dark:text-gray-600">Scalable</div>
           </div>
         </div>
-        <div class="relative lg:ml-auto w-full max-w-lg">
+        <div class="relative lg:ml-auto w-full max-w-lg reveal-inclined delay-500">
           <div
-            class="absolute -left-12 bottom-12 z-20 bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-xl animate-float"
+            class="absolute -left-4 md:-left-12 bottom-4 md:bottom-12 z-20 bg-white dark:bg-slate-800 p-4 md:p-6 rounded-2xl shadow-xl animate-float"
             style="animation: bounce 6s infinite ease-in-out;">
             <div class="flex items-center gap-3 mb-2">
               <div class="w-2 h-2 rounded-full bg-secondary"></div>
@@ -339,8 +477,7 @@
             <div class="text-3xl font-bold text-gray-900 dark:text-white mb-1">+24%</div>
             <div class="text-xs text-gray-500 dark:text-gray-400">Promedio de crecimiento<br />primeros 6 meses.</div>
           </div>
-          <div
-            class="relative bg-gray-900 rounded-3xl p-2 shadow-2xl transform rotate-1 hover:rotate-0 transition-transform duration-500">
+          <div class="relative bg-gray-900 rounded-3xl p-2 shadow-2xl transition-all duration-700">
             <div class="bg-slate-800 rounded-2xl overflow-hidden border border-slate-700 aspect-[4/3] relative">
               <div class="absolute inset-0 bg-gradient-to-br from-slate-800 to-black p-6 flex flex-col justify-between">
                 <div class="flex justify-between items-start">
@@ -388,9 +525,9 @@
 
 
 
-  <section id="servicios" class="py-20 px-4 reveal-on-scroll">
+  <section id="servicios" class="py-12 md:py-20 px-4 reveal-on-scroll">
     <div
-      class="max-w-7xl mx-auto rounded-[2.5rem] bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 p-8 md:p-12 lg:p-20 text-white shadow-[0_20px_50px_rgba(37,99,235,0.3)] relative overflow-hidden group">
+      class="max-w-7xl mx-auto rounded-3xl md:rounded-[2.5rem] bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 p-6 md:p-12 lg:p-20 text-white shadow-[0_20px_50px_rgba(37,99,235,0.3)] relative overflow-hidden group scroll-straighten">
       <!-- Decorative Background Elements -->
       <div
         class="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-white/10 to-transparent pointer-events-none">
@@ -408,10 +545,10 @@
             class="inline-block px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-xs font-bold uppercase tracking-widest mb-6">
             Ecosistema Digital v5.0
           </span>
-          <h2 class="font-display font-extrabold text-4xl md:text-5xl lg:text-6xl mb-8 leading-[1.1]">
+          <h2 class="font-display font-extrabold text-3xl md:text-5xl lg:text-6xl mb-6 md:mb-8 leading-[1.1]">
             Digitalización <br /><span class="text-secondary">total</span> para su Empresa
           </h2>
-          <p class="text-xl text-blue-100/90 mb-10 leading-relaxed max-w-lg font-medium">
+          <p class="text-lg md:text-xl text-blue-100/90 mb-8 md:mb-10 leading-relaxed max-w-lg font-medium">
             Sincronice cada rincón de su negocio. Desde el stock físico hasta la contabilidad,
             todo en una plataforma diseñada para la velocidad y el crecimiento.
           </p>
@@ -453,7 +590,7 @@
             class="absolute -inset-4 bg-white/5 rounded-[2rem] blur-2xl -z-10 group-hover:bg-white/10 transition-all">
           </div>
           <div
-            class="bg-white/10 backdrop-blur-xl rounded-3xl p-8 border border-white/20 shadow-2xl relative overflow-hidden">
+            class="bg-white/10 backdrop-blur-xl rounded-2xl md:rounded-3xl p-6 md:p-8 border border-white/20 shadow-2xl relative overflow-hidden">
             <div class="flex justify-between items-start mb-8">
               <div class="space-y-1">
                 <span class="text-[10px] font-bold uppercase tracking-[0.2em] text-blue-200 opacity-70">Reporte
@@ -526,18 +663,20 @@
 
   <section id="nosotros" class="bg-slate-900 text-white py-16 reveal-on-scroll">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="grid md:grid-cols-3 gap-8 text-center divide-y md:divide-y-0 md:divide-x divide-slate-800">
-        <div class="px-4">
-          <div class="font-display font-bold text-5xl text-secondary mb-2">100%</div>
-          <div class="text-xs font-bold tracking-wider text-slate-400 uppercase">Ahorro de Tiempo</div>
+      <div
+        class="grid grid-cols-1 sm:grid-cols-3 gap-8 text-center divide-y sm:divide-y-0 sm:divide-x divide-slate-800">
+        <div class="px-4 py-6 sm:py-0">
+          <div class="font-display font-bold text-4xl md:text-5xl text-secondary mb-2">100%</div>
+          <div class="text-[10px] md:text-xs font-bold tracking-wider text-slate-400 uppercase">Ahorro de Tiempo</div>
         </div>
-        <div class="px-4 pt-8 md:pt-0">
-          <div class="font-display font-bold text-5xl text-secondary mb-2">-35%</div>
-          <div class="text-xs font-bold tracking-wider text-slate-400 uppercase">Costos Operativos</div>
+        <div class="px-4 py-6 sm:py-0">
+          <div class="font-display font-bold text-4xl md:text-5xl text-secondary mb-2">-35%</div>
+          <div class="text-[10px] md:text-xs font-bold tracking-wider text-slate-400 uppercase">Costos Operativos</div>
         </div>
-        <div class="px-4 pt-8 md:pt-0">
-          <div class="font-display font-bold text-5xl text-secondary mb-2">+10k</div>
-          <div class="text-xs font-bold tracking-wider text-slate-400 uppercase">Ventas Procesadas/Día</div>
+        <div class="px-4 py-6 sm:py-0">
+          <div class="font-display font-bold text-4xl md:text-5xl text-secondary mb-2">+10k</div>
+          <div class="text-[10px] md:text-xs font-bold tracking-wider text-slate-400 uppercase">Ventas Procesadas/Día
+          </div>
         </div>
       </div>
     </div>
@@ -567,7 +706,7 @@
           </div>
         </div>
         <div
-          class="bg-white dark:bg-slate-800 p-8 rounded-2xl shadow-sm hover:shadow-lg transition-all border border-gray-100 dark:border-gray-700">
+          class="bg-white dark:bg-slate-800 p-8 rounded-2xl shadow-sm hover:shadow-lg transition-all border border-gray-100 dark:border-gray-700 tilt-card reveal-left-on-scroll">
           <div
             class="w-12 h-12 bg-blue-50 dark:bg-blue-900/30 text-primary rounded-xl flex items-center justify-center mb-6">
             <span class="material-icons-round">shopping_cart</span>
@@ -585,7 +724,7 @@
           </ul>
         </div>
         <div
-          class="bg-white dark:bg-slate-800 p-8 rounded-2xl shadow-sm hover:shadow-lg transition-all border border-gray-100 dark:border-gray-700">
+          class="bg-white dark:bg-slate-800 p-8 rounded-2xl shadow-sm hover:shadow-lg transition-all border border-gray-100 dark:border-gray-700 tilt-card reveal-scale-on-scroll">
           <div
             class="w-12 h-12 bg-blue-50 dark:bg-blue-900/30 text-primary rounded-xl flex items-center justify-center mb-6">
             <span class="material-icons-round">inventory</span>
@@ -603,7 +742,7 @@
           </ul>
         </div>
         <div
-          class="bg-white dark:bg-slate-800 p-8 rounded-2xl shadow-sm hover:shadow-lg transition-all border border-gray-100 dark:border-gray-700">
+          class="bg-white dark:bg-slate-800 p-8 rounded-2xl shadow-sm hover:shadow-lg transition-all border border-gray-100 dark:border-gray-700 tilt-card reveal-right-on-scroll">
           <div
             class="w-12 h-12 bg-blue-50 dark:bg-blue-900/30 text-primary rounded-xl flex items-center justify-center mb-6">
             <span class="material-icons-round">groups</span>
@@ -689,10 +828,10 @@
           actual. Todos nuestros planes son escalables.</p>
       </div>
 
-      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
         <!-- Pack 1: Inicial -->
         <div
-          class="bg-white dark:bg-slate-800 p-8 rounded-3xl shadow-soft border border-gray-100 dark:border-gray-700 flex flex-col hover:-translate-y-2 transition-transform duration-300">
+          class="bg-white dark:bg-slate-800 p-8 rounded-3xl shadow-soft border border-gray-100 dark:border-gray-700 flex flex-col tilt-card reveal-left-on-scroll">
           <div class="mb-8">
             <h3 class="font-display font-bold text-xl text-gray-900 dark:text-white mb-2">Plan Inicial</h3>
             <p class="text-xs text-gray-500 dark:text-gray-400">Ideal para locales comerciales individuales.</p>
@@ -745,7 +884,6 @@
               class="absolute -right-2 -top-2 w-12 h-12 bg-secondary/20 rounded-full blur-xl group-hover/bonus:scale-150 transition-transform">
             </div>
             <div class="flex items-center gap-3 mb-2">
-              <span class="material-icons-round text-secondary text-base">auto_awesome</span>
               <span class="text-[10px] font-black uppercase tracking-widest text-lime-600 dark:text-secondary">Oferta
                 Limitada</span>
             </div>
@@ -815,7 +953,7 @@
 
         <!-- Pack 3: Profesional -->
         <div
-          class="bg-white dark:bg-slate-800 p-8 rounded-3xl shadow-soft border border-gray-100 dark:border-gray-700 flex flex-col hover:-translate-y-2 transition-transform duration-300">
+          class="bg-white dark:bg-slate-800 p-8 rounded-3xl shadow-soft border border-gray-100 dark:border-gray-700 flex flex-col tilt-card reveal-right-on-scroll">
           <div class="mb-8">
             <h3 class="font-display font-bold text-xl text-gray-900 dark:text-white mb-2">Plan Profesional</h3>
             <p class="text-xs text-gray-500 dark:text-gray-400">Control total para empresas medianas.</p>
@@ -887,7 +1025,7 @@
 
   <section class="py-24 bg-white dark:bg-background-dark overflow-hidden">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="grid lg:grid-cols-2 gap-16 items-center">
+      <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
         <div>
           <div class="flex items-center gap-2 mb-6">
             <span class="text-xs font-bold text-blue-500 uppercase">Tecnología de Vanguardia</span>
@@ -895,17 +1033,17 @@
               <div class="absolute right-1 top-1 w-2 h-2 bg-blue-500 rounded-full"></div>
             </div>
           </div>
-          <h2 class="font-display font-bold text-4xl sm:text-5xl leading-tight text-gray-900 dark:text-white mb-6">
+          <h2 class="font-display font-bold text-3xl sm:text-5xl leading-tight text-gray-900 dark:text-white mb-6">
             ¿Qué hace que <br />
             HORIZONT sea <span class="text-gradient-primary">Diferente</span> <br />
             y <span class="text-secondary">Efectivo?</span>
           </h2>
-          <p class="text-gray-600 dark:text-gray-400 mb-10 leading-relaxed">
+          <p class="text-base text-gray-600 dark:text-gray-400 mb-8 md:mb-10 leading-relaxed">
             No forzamos a las empresas a cambiar su forma de trabajar: la tecnología se adapta a su negocio, no al
             revés.
             Nuestro enfoque se basa en un análisis profundo de sus procesos operativos.
           </p>
-          <div class="grid sm:grid-cols-2 gap-6">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
             <div class="flex items-center gap-3">
               <div class="w-8 h-8 rounded-full bg-secondary text-black flex items-center justify-center flex-shrink-0">
                 <span class="material-icons-round text-sm">trending_down</span>
@@ -1138,6 +1276,25 @@
       }
     });
 
+    // Mobile Menu Toggle Logic
+    const menuBtn = document.getElementById('mobile-menu-toggle');
+    const menu = document.getElementById('mobile-menu');
+    menuBtn.addEventListener('click', () => {
+      menu.classList.toggle('hidden');
+      const icon = menuBtn.querySelector('.material-icons-round');
+      icon.textContent = menu.classList.contains('hidden') ? 'menu' : 'close';
+      document.body.classList.toggle('overflow-hidden');
+    });
+
+    // Close menu on link click
+    menu.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        menu.classList.add('hidden');
+        menuBtn.querySelector('.material-icons-round').textContent = 'menu';
+        document.body.classList.remove('overflow-hidden');
+      });
+    });
+
     // Reveal on scroll
     const observerOptions = {
       threshold: 0.1
@@ -1146,16 +1303,134 @@
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
-          entry.target.classList.add('reveal');
+          if (entry.target.classList.contains('reveal-on-scroll')) {
+            entry.target.classList.add('reveal');
+          } else if (entry.target.classList.contains('reveal-perspective-on-scroll')) {
+            entry.target.classList.add('reveal-perspective');
+          } else if (entry.target.classList.contains('reveal-inclined-on-scroll')) {
+            entry.target.classList.add('reveal-inclined');
+          } else {
+            entry.target.classList.add('reveal');
+          }
           observer.unobserve(entry.target);
         }
       });
     }, observerOptions);
 
-    document.querySelectorAll('section, .reveal-on-scroll').forEach(section => {
-      section.classList.add('opacity-0'); // Initial state
-      observer.observe(section);
+    document.querySelectorAll('section, .reveal-on-scroll, .reveal-perspective-on-scroll, .reveal-inclined-on-scroll, .reveal-left-on-scroll, .reveal-right-on-scroll, .reveal-scale-on-scroll').forEach(el => {
+      if (!el.classList.contains('reveal-perspective') && !el.classList.contains('reveal-inclined')) {
+        el.classList.add('opacity-0');
+      }
+      observer.observe(el);
     });
+
+    const observer2 = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          if (entry.target.classList.contains('reveal-left-on-scroll')) entry.target.classList.add('reveal-left');
+          else if (entry.target.classList.contains('reveal-right-on-scroll')) entry.target.classList.add('reveal-right');
+          else if (entry.target.classList.contains('reveal-scale-on-scroll')) entry.target.classList.add('reveal-scale');
+          observer2.unobserve(entry.target);
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll('.reveal-left-on-scroll, .reveal-right-on-scroll, .reveal-scale-on-scroll').forEach(el => observer2.observe(el));
+
+    // Mouse Interaction: Spotlight and Magnetic
+    const spotlight = document.getElementById('hero-spotlight');
+    const heroSection = document.getElementById('inicio'); // Assuming 'inicio' is the ID of your hero section
+
+    document.addEventListener('mousemove', (e) => {
+      // Spotlight Logic
+      if (spotlight && heroSection) {
+        const rect = heroSection.getBoundingClientRect();
+        if (e.clientY >= rect.top && e.clientY <= rect.bottom) {
+          spotlight.style.left = `${e.clientX}px`;
+          spotlight.style.top = `${e.clientY + window.scrollY}px`;
+          spotlight.style.opacity = '1';
+        } else {
+          spotlight.style.opacity = '0';
+        }
+      }
+
+      // Parallax Blobs
+      const x = (e.clientX / window.innerWidth - 0.5) * 40;
+      const y = (e.clientY / window.innerHeight - 0.5) * 40;
+
+      document.querySelectorAll('.parallax-blob').forEach(blob => {
+        const speed = blob.getAttribute('data-speed') || 1;
+        blob.style.transform = `translate(${x * speed}px, ${y * speed}px)`;
+      });
+
+      // Magnetic Buttons
+      document.querySelectorAll('.magnetic-wrap').forEach(wrap => {
+        const rect = wrap.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+        const distance = Math.hypot(e.clientX - centerX, e.clientY - centerY);
+
+        if (distance < 100) {
+          const moveX = (e.clientX - centerX) * 0.4;
+          const moveY = (e.clientY - centerY) * 0.4;
+          wrap.style.transform = `translate(${moveX}px, ${moveY}px)`;
+        } else {
+          wrap.style.transform = `translate(0px, 0px)`;
+        }
+      });
+    });
+
+    // Mouse Interaction: 3D Tilt for cards
+    document.querySelectorAll('.tilt-card').forEach(card => {
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        const rotateX = (centerY - y) / 10;
+        const rotateY = (x - centerX) / 10;
+
+        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+      });
+
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+      });
+    });
+
+    // Progressive Straighten on Scroll
+    const scrollItems = document.querySelectorAll('.scroll-straighten');
+
+    function updateScrollAnimations() {
+      const vh = window.innerHeight;
+
+      scrollItems.forEach(item => {
+        const rect = item.getBoundingClientRect();
+        const itemTop = rect.top;
+        const itemHeight = rect.height;
+
+        // Calculate factor based on position in viewport
+        // 1.0 when item is at the bottom, 0.0 when it's at the center
+        let factor = (itemTop - vh * 0.2) / (vh * 0.8);
+        factor = Math.max(0, Math.min(1, factor));
+
+        // Smooth factor (straightens as it approaches center/top)
+        const rotation = factor * 25; // 25deg at bottom, 0deg at top/center
+        const translateY = factor * 50; // 50px at bottom, 0px at top/center
+        const scale = 0.9 + (1 - factor) * 0.1; // 0.9 at bottom, 1.0 at center
+        const opacity = Math.min(1, (1 - factor) * 2);
+
+        item.style.transform = `perspective(1500px) rotateX(${rotation}deg) scale(${scale}) translateY(${translateY}px)`;
+        item.style.opacity = opacity;
+      });
+
+      requestAnimationFrame(updateScrollAnimations);
+    }
+
+    if (scrollItems.length > 0) {
+      requestAnimationFrame(updateScrollAnimations);
+    }
   </script>
 </body>
 
