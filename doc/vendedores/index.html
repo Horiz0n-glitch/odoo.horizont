@@ -13,6 +13,7 @@
         rel="stylesheet" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet" />
     <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
     <script>
         tailwind.config = {
             darkMode: "class",
@@ -133,7 +134,7 @@
     <div class="flex">
         <!-- Sidebar Navigation -->
         <aside id="sidebar"
-            class="hidden lg:block fixed left-0 top-0 h-screen w-72 border-r border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50 backdrop-blur-xl z-50 doc-sidebar overflow-y-auto overflow-x-hidden transition-transform duration-300 lg:translate-x-0 -translate-x-full">
+            class="fixed left-0 top-0 h-screen w-72 border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 lg:bg-slate-50/50 lg:dark:bg-slate-950/50 backdrop-blur-xl z-50 doc-sidebar overflow-y-auto overflow-x-hidden transition-transform duration-300 lg:translate-x-0 -translate-x-full shadow-2xl lg:shadow-none">
             <div class="p-8">
                 <div class="flex items-center gap-3 mb-10">
                     <div
@@ -769,56 +770,52 @@
                         </div>
                     </section>
 
-                    <!-- 11. EJECUCIÓN POST-VENTA -->
+                    <!-- 11. PROCESO POST-VENTA -->
                     <section id="postventa" class="scroll-mt-24 mb-24 anim-reveal">
                         <h2 class="flex items-center gap-4 text-slate-900 dark:text-white">
                             <span
                                 class="w-8 h-8 rounded bg-primary-100 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 flex items-center justify-center text-sm">11</span>
-                            PROCESO DE EJECUCIÓN POST-VENTA
+                            PROTOCOLO TÉCNICO POST-VENTA (SLA)
                         </h2>
-                        <p>Tras la firma y el cobro del 30%, se activa el protocolo técnico de Horizont Software.</p>
+                        <p>Una vez verificado el pago inicial (30%), se activa el flujo de despliegue en la
+                            infraestructura de Horizont.</p>
 
-                        <div class="space-y-4 not-prose mt-8 relative">
-                            <div class="absolute left-[34px] top-0 bottom-0 w-px bg-slate-200 dark:bg-slate-800"></div>
+                        <div
+                            class="mt-8 mb-12 bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 overflow-x-auto">
+                            <pre class="mermaid text-center">
+graph TD
+    A[<b>CIERRE COMERCIAL</b><br/>Cobro 30% Anticipo] --> B(<b>ALTA TÉCNICA</b><br/>Creación de Instancia Odoo)
+    B --> C{Relevamiento}
+    C -->|Fiscal| D[Configuración AFIP<br/>Certificados CRT/KEY]
+    C -->|Datos| E[Migración Stock/Precios<br/>Corrección de CSV/Excel]
+    D --> F[TEST DE CONEXIÓN]
+    E --> F
+    F --> G(<b>CAPACITACIÓN</b><br/>Personal POS / Stock)
+    G --> H{<b>LANZAMIENTO</b>}
+    H --> I[Venta Real n°1<br/>Soporte in-situ 24hs]
+    I --> J[Pase a Mantenimiento Mensual]
 
-                            <div class="flex gap-6 relative">
-                                <div
-                                    class="w-[68px] h-[68px] rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center font-black text-xl text-slate-400 shadow-sm flex-shrink-0 z-10">
-                                    01</div>
-                                <div class="pt-2">
-                                    <h5
-                                        class="font-black text-slate-900 dark:text-white uppercase tracking-tighter mb-1">
-                                        Fase de Relevamiento Fiscal</h5>
-                                    <p class="text-xs text-slate-500 leading-relaxed">El consultor solicita CUIT, clave
-                                        fiscal y puntos de venta activos. Esto es crítico para conectar Odoo con el
-                                        servidor de la AFIP mediante certificados SSL.</p>
-                                </div>
+    style A fill:#3b82f6,stroke:#2563eb,color:#fff
+    style H fill:#a3e635,stroke:#84cc16,color:#000
+    style J fill:#f8fafc,stroke:#e2e8f0,color:#64748b
+                            </pre>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 not-prose">
+                            <div class="explanation-box">
+                                <h4
+                                    class="font-bold text-slate-900 dark:text-white mb-2 uppercase text-xs tracking-widest">
+                                    Compromiso Tecnológico</h4>
+                                <p class="text-xs">El despliegue tarda un máximo de entre 48hs y 72hs hábiles,
+                                    dependiendo de la velocidad de entrega de los certificados fiscales por parte del
+                                    cliente o su contador.</p>
                             </div>
-                            <div class="flex gap-6 relative">
-                                <div
-                                    class="w-[68px] h-[68px] rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center font-black text-xl text-slate-400 shadow-sm flex-shrink-0 z-10">
-                                    02</div>
-                                <div class="pt-2">
-                                    <h5
-                                        class="font-black text-slate-900 dark:text-white uppercase tracking-tighter mb-1">
-                                        Migración de Inventario</h5>
-                                    <p class="text-xs text-slate-500 leading-relaxed">Se recibe un Excel o CSV del
-                                        cliente. Nuestro equipo técnico normaliza las categorías para que la tienda
-                                        online y el POS compartan una jerarquía lógica.</p>
-                                </div>
-                            </div>
-                            <div class="flex gap-6 relative">
-                                <div
-                                    class="w-[68px] h-[68px] rounded-2xl bg-white dark:bg-slate-950 border-2 border-primary-500 flex items-center justify-center font-black text-xl text-primary-500 shadow-lg shadow-primary-500/20 flex-shrink-0 z-10">
-                                    03</div>
-                                <div class="pt-2">
-                                    <h5
-                                        class="font-black text-slate-900 dark:text-white uppercase tracking-tighter mb-1">
-                                        Capacitación In-Situ</h5>
-                                    <p class="text-xs text-slate-500 leading-relaxed">Se capacita al personal de caja en
-                                        el POS y al encargado de stock en la app móvil. Se realiza una venta de prueba
-                                        REAL y se emite el primer ticket fiscal.</p>
-                                </div>
+                            <div class="explanation-box border-l-4 border-l-secondary">
+                                <h4
+                                    class="font-bold text-slate-900 dark:text-white mb-2 uppercase text-xs tracking-widest">
+                                    Soporte In-Situ</h4>
+                                <p class="text-xs">Un técnico de Horizont estará físicamente en el local el día del
+                                    lanzamiento para asegurar que la primera venta fiscal se realice sin fricciones.</p>
                             </div>
                         </div>
                     </section>
@@ -854,6 +851,22 @@
             htmlElement.classList.remove('dark');
         }
 
+        // Mermaid Initialization
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: htmlElement.classList.contains('dark') ? 'dark' : 'default',
+            securityLevel: 'loose',
+            fontFamily: 'Inter',
+            themeVariables: {
+                primaryColor: '#3b82f6',
+                primaryTextColor: '#fff',
+                primaryBorderColor: '#2563eb',
+                lineColor: '#94a3b8',
+                secondaryColor: '#a3e635',
+                tertiaryColor: '#f8fafc'
+            }
+        });
+
         themeToggleBtn.addEventListener('click', function () {
             if (htmlElement.classList.contains('dark')) {
                 htmlElement.classList.remove('dark');
@@ -862,17 +875,18 @@
                 htmlElement.classList.add('dark');
                 localStorage.setItem('color-theme', 'dark');
             }
-        });
 
+            // Re-render mermaid when theme changes
+            setTimeout(() => {
+                location.reload();
+            }, 50);
+        });
         // Mobile Sidebar Toggle
         const sidebar = document.getElementById('sidebar');
         const mobileBtn = document.getElementById('mobile-sidebar-toggle');
 
         mobileBtn.addEventListener('click', () => {
             sidebar.classList.toggle('-translate-x-full');
-            sidebar.classList.toggle('block');
-            sidebar.classList.toggle('bg-white');
-            sidebar.classList.toggle('dark:bg-slate-950');
         });
 
         // Hide sidebar on link click (mobile)
